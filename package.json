@@ -1,0 +1,25 @@
+{
+  "name": "reservation_acme_planner",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "build:dev": "npm run build -- --mode=development  --watch",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "npm run build:dev & nodemon server --ignore src/ --ignore dist/"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1",
+    "pg": "^8.7.3",
+    "sequelize": "^6.20.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16",
+    "webpack": "^5.73.0",
+    "webpack-cli": "^4.9.2"
+  }
+}
