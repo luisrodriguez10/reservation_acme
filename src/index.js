@@ -5,11 +5,12 @@ const reservationsList = document.querySelector("#reservations-list");
 
 let users, restaurants;
 
-const renderUsers = (users) => {
+const renderUsers = () => {
+  const userId = window.location.hash.slice(1);
   const html = users
     .map((user) => {
       return `
-            <li>
+            <li ${userId * 1 === user.id ? "class='selected'" : ""}>
                 <a href='#${user.id}'>
                     ${user.name}
                 </a>
@@ -20,7 +21,7 @@ const renderUsers = (users) => {
   usersList.innerHTML = html;
 };
 
-const renderRestaurants = (restaurants) => {
+const renderRestaurants = () => {
   const html = restaurants
     .map((restaurant) => {
       return `
@@ -32,6 +33,20 @@ const renderRestaurants = (restaurants) => {
     .join(" ");
   restaurantsList.innerHTML = html;
 };
+
+reservationsList.addEventListener("click", async (e) => {
+  const userId = window.location.hash.slice(1);
+  if (userId) {
+    if (e.target.tagName === "BUTTON") {
+      const reservationId = e.target.getAttribute("data-id");
+      const url = `/api/reservations/${reservationId}`;
+      await fetch(url, {
+        method: "DELETE",
+      });
+      renderReservations();
+    }
+  }
+});
 
 const renderReservations = async () => {
   const userId = window.location.hash.slice(1);
@@ -45,6 +60,8 @@ const renderReservations = async () => {
         return `
             <li>
                 ${restaurant.name}
+                </br>
+                <button data-id='${reservation.id}'>Delete Reservation</button>
             </li>
         `;
       })
@@ -65,21 +82,21 @@ restaurantsList.addEventListener("click", async (e) => {
       body: JSON.stringify({ restaurantId }),
       headers: { "Content-Type": "application/json" },
     });
-    renderReservations()
+    renderReservations();
   }
 });
 
 window.addEventListener("hashchange", () => {
   renderReservations();
+  renderUsers();
 });
 
 const init = async () => {
-  const userId = window.location.hash.slice(1);
   users = await fetchUsers();
-  renderUsers(users);
+  renderUsers();
   restaurants = await fetchRestaurants();
-  renderRestaurants(restaurants);
-  renderReservations(userId);
+  renderRestaurants();
+  renderReservations();
 };
 
 init();
